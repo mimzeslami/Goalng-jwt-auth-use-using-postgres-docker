@@ -1,0 +1,39 @@
+version: '3'
+
+services:
+  application:
+    build:
+      context: ./
+      dockerfile: ./Dockerfile
+    restart: always
+    ports:
+      - "8080:8080"
+    deploy:
+      mode: replicated
+      replicas: 1
+    environment:
+      DB_HOST: "postgres"
+      DB_PORT: "5432"
+      DB_USER: "admin"
+      DB_PASSWORD: "secret"
+      DB_NAME: "demo"
+      DB_SSLMODE: "disable"
+      DB_TIMEZONE: "UTC"
+      
+
+  postgres:
+    image: 'postgres:14.0'
+    ports:
+      - "5432:5432"
+    restart: always
+    deploy:
+      mode: replicated
+      replicas: 1
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: secret
+      POSTGRES_DB: demo
+    volumes:
+      - ./database-data/postgres/:/var/lib/postgresql/data/
+
+      
